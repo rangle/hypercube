@@ -31,6 +31,9 @@ module.exports = function (req, res) {
 
 
   form.parse(req, function(err, fields, files) {
+    if(err) {
+      throw err;
+    }
     var outPath;
     var versionJSON;
     var stf = {
@@ -50,39 +53,66 @@ module.exports = function (req, res) {
     } else {
       versionJSON = makeVersionJSON(fields.commit);
       if(~~fields.pr) {
-        outPath = config.uploadPath +
-          '/pr/' + ~~fields.pr;
+        outPath = '/pr/' + ~~fields.pr;
       } else if(fields.branch) {
-        outPath = config.uploadPath +
-          '/branch/' + fields.branch;
+        outPath = '/branch/' + fields.branch;
       } else {
         missing_fields.concat([['fields', 'pr']]);
         respondMissing(res, missing_fields);
       }
 
-      fs.exists(outPath, handlePathExists);
+      fs.exists(config.uploadPath + outPath, handlePathExists);
+    }
+
+    function updateManifest () {
+      fs.readFile(config.uploadPath + '/manifest.json', function(err, data) {
+        if(err) {
+          throw err;
+        }
+        var manifest = JSON.parse(data);
+        var time = new Date().toISOString();
+        // Clear other timestamp references to the same output path
+        for(var each in manifest.by.timestamp) {
+          if(manifest.by.timestamp[each] === outPath) {
+            manifest.by.timestamp[each] = undefined;
+          }
+        }
+        manifest.by.timestamp[time] = outPath;
+
+        if(~~fields.pr) {
+          manifest.by.pr[~~fields.pr] = outPath;
+        } else if(fields.branch) {
+          manifest.by.branch[fields.branch] = outPath;
+        }
+        fs.writeFile(config.uploadPath + '/manifest.json', JSON.stringify(manifest), function(err) {
+          if(err) {
+            throw err;
+          }
+        });
+      });
     }
 
     function handlePathExists (exists) {
       if(exists) {
         writeOut();
       } else {
-        fs.mkdir(outPath, writeOut);
+        fs.mkdir(config.uploadPath + outPath, writeOut);
       }
     }
 
     function writeOut () {
       moveProper(files.js.path,
-                 outPath + '/app.js');
+                 config.uploadPath + outPath + '/app.js');
       moveProper(files.css.path,
-                 outPath + '/app.css');
+                 config.uploadPath + outPath + '/app.css');
 
-      fs.unlink(outPath + '/version.json', function () {
-        fs.writeFile(outPath + '/version.json', versionJSON, function(e) {
+      fs.unlink(config.uploadPath + outPath + '/version.json', function () {
+        fs.writeFile(config.uploadPath + outPath + '/version.json', versionJSON, function(e) {
           if (e) {
             console.error('Performing harakiri...');
           } else {
-            complete(res, outPath);
+            updateManifest();
+            complete(res);
           }
         });
       });
