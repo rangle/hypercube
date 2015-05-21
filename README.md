@@ -8,7 +8,7 @@ There is one route `/upload` which expects:
   - A `commit` field with a commit hash to uniquely identify the current state of the build
   - Either a `pr` field with a pull request number _or_ a `branch` field with a branch name
 
-The requset should be submitted as `multipart/form-data` with the `POST` verb.
+The request should be submitted as `multipart/form-data` with the `POST` verb.
 
 When an `/upload` request succeeds, the `app.js`, `app.css`, and `version.json` files are written to the directory specified in `config.js`(you can base yours on `config.js.example`).
 The `version.json` file is automatically populated with the `commit` field in the `version` property of its root object, where Cordwood will read the build's unique identifier from.
