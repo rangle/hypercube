@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <style>
+      field[mandatory] > label:after {
+        content: "*";
+        color: red;
+      }
+
+      field > input {
+        margin-bottom: 1em;
+        margin-top: 0.2em;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ECECEC;
+      }
+
+      input {
+        width: 100%
+      }
+
+      h1 {
+        font-size: 64px;
+      }
+
+      form {
+        padding: 64px;
+        padding-top: 0;
+        background-color: #FCFCFC;
+        border-radius: 2.8284271247461903px;
+        box-shadow: 0 0 8px rgba(0,0,0, 0.2);
+      }
+
+      input[type=submit] {
+        width: 62.5%;
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+      <h1><em>Hypercube</em></h1>
+      <field mandatory>
+	<label for="js">app.js file: </label><br>
+	<input type="file" id="js" name="js"/><br>
+      </field>
+      <field mandatory>
+	<label for="css">app.css file: </label><br>
+	<input type="file" id="css" name="css"/><br>
+      </field>
+      <field mandatory>
+	<label for="commit">Commit hash: </label><br>
+	<input type="text" id="commit" name="commit"/><br>
+      </field>
+      <field>
+	<label for="branch">Branch name: (alternative to PR number)</label><br>
+	<input type="text" id="branch" name="branch"/><br>
+      </field>
+      <field>
+	<label for="pr">PR number: (alternative to branch name)</label><br>
+	<input type="number" id="pr" name="pr"/><br>
+      </field>
+      <center>
+	<input type="submit"/>
+      </center>
+    </form>
+  </body>
+</html>
