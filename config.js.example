@@ -1,4 +1,4 @@
 module.exports = {
-  uploadPath: '/home/aaron/src/hypercube/uploads',
+  uploadPath: '/var/hypercube/uploads',
   port: 8080
 }
