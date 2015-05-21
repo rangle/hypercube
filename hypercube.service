@@ -6,6 +6,7 @@ After=network.target remote-fs.target nss-lookup.target
 User=hypercube
 ExecStart=/usr/bin/node /var/hypercube/index.js
 PrivateTmp=true
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
