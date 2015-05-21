@@ -1,3 +1,6 @@
+# config module
+/config.js
+
 # Logs
 *.log
 
