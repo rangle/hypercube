@@ -1,0 +1,24 @@
+{
+  "name": "hypercube",
+  "version": "0.1.0",
+  "description": "Hypercube build submission server, for submitting cordwood builds to a static server.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rangle/hypercube.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rangle/hypercube/issues"
+  },
+  "homepage": "https://github.com/rangle/hypercube#readme",
+  "dependencies": {
+    "express": "^4.12.4",
+    "formidable": "^1.0.17",
+    "ramda": "^0.14.0"
+  }
+}
