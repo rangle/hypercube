@@ -1,6 +1,9 @@
 # config module
 /config.js
 
+# uploads directory
+/uploads
+
 # Logs
 *.log
 
