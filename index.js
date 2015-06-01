@@ -13,10 +13,8 @@ app.post('/upload', handlers.upload);
 app.set('port', process.env.PORT || config.port);
 app.listen(config.port);
 
-assureDir(config.uploadPath + '/pr');
-assureDir(config.uploadPath + '/branch');
-assureManifest();
-
+assureDir(config.uploadPath + '/commit');
+assureVersions();
 
 function assureDir(dir) {
   fs.exists(dir, function(exists) {
@@ -31,8 +29,8 @@ function assureDir(dir) {
   });
 }
 
-function assureManifest() {
-  var file = config.uploadPath + '/manifest.json';
+function assureVersions() {
+  var file = config.uploadPath + '/versions.json';
   fs.exists(file, function(exists) {
     if(!exists) {
       fs.open(file, 'w', function(e, fd) {
@@ -41,14 +39,9 @@ function assureManifest() {
           throw e;
         } else {
           var data = JSON.stringify({
-            by: {
-              pr: {
-              },
-              branch: {
-              },
-              timestamp: {
-              }
-            }
+            prs: [],
+            branches: [],
+            commits: []
           });
           fs.write(fd, data, function(e) {
             if(e) {
