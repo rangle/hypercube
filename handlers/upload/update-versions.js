@@ -27,7 +27,8 @@ module.exports = function updateVersions(stf) {
       branch: stf.fields.branch,
       timestamp: time,
       commit: stf.fields.commit,
-      path: outPath
+      path: outPath,
+      pr: stf.fields.pr
     };
 
     // Remove existing references to the branch
@@ -37,6 +38,12 @@ module.exports = function updateVersions(stf) {
     // Remove existing references to the commit, just in case.
     versions.commits = complementBy('commit', versions.commits, build);
     versions.commits.push(build);
+
+    if(build.pr) {
+      // Remove existing references to the pr
+      versions.prs = complementBy('pr', versions.prs, build);
+      versions.prs.push(build);
+    }
 
     fs.writeFile(config.uploadPath + '/versions.json', JSON.stringify(versions), function(err) {
       if(err) {
