@@ -47,6 +47,7 @@ module.exports = function (req, res) {
         });
       } else {
         fs.mkdir(config.uploadPath + outPath, writeOut(stf));
+        respond.complete(res);
       }
     }
   });
