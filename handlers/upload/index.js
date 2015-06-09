@@ -36,18 +36,26 @@ module.exports = function (req, res) {
     }
 
     function handlePathExists (exists) {
+      function done(e){
+        if (e) {
+          console.error('Could not write build to output path, bailing out.');
+          throw e;
+        } else {
+          updateVersions(stf);
+          respond.complete(res);
+        }
+      }
       if(exists) {
-        writeOut(stf, function(e) {
+        writeOut(stf, done);
+      } else {
+        fs.mkdir(config.uploadPath + outPath, function(e){
           if (e) {
-            console.error('Performing harakiri...');
+            console.error('Could not create output path for build, bailing out.');
+            throw e;
           } else {
-            updateVersions(stf);
-            respond.complete(res);
+            writeOut(stf, done);
           }
         });
-      } else {
-        fs.mkdir(config.uploadPath + outPath, writeOut(stf));
-        respond.complete(res);
       }
     }
   });
